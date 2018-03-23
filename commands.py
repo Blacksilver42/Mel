@@ -26,39 +26,41 @@ class Order:
     
     def exec(self):
         mem.C = self
-        [
-            hlt, cxe, rau, ral, sau, mst, ldc, ldx,
-            inp, exc
-        ][mem.C.command](mem.C)
+        try:
+            [
+                hlt, cxe, rau, ral, sau, mst, ldc, ldx,
+                inp, exc
+            ][mem.C.command]()
+        except:
+            hcf()
 
 
-
-def hcf(o):
+def hcf():
     # HALT_AND_CATCH_FIRE
     print("HCF")
     raise SystemExit
     
 
-def hlt(o):
+def hlt():
     # TODO: implement this properly
     # sns also uses the same opcode.
     raise SystemExit
 
-def sns(o):
+def sns():
     # What do you want me to sense?
     # Interpreter flags?
     # TODO.
     pass
 
-def cxe(o):
+def cxe():
     # TODO
     pass
 
-def rau(o):
-    mem.U = mem.read(o)
+def rau():
+    mem.U = mem.cread()
 
 def ral(o):
-    mem.L = mem.read(o)
+    mem.L = mem.cread()
 
 def sau(o):
     #TODO

@@ -35,6 +35,9 @@ def echo_reg():
 def read(order):
     return DRUM[order.dtrack][order.dsec]
 
+def cread():
+    return read(mem.C)
+
 def xread(track, sec):
     return DRUM[track][sec]
 
