@@ -1,0 +1,3 @@
+table.order tr:nth-child(3) td span:nth-child(2) {
+  float: right
+}
