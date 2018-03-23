@@ -81,5 +81,38 @@
       </table>
       <p>TODO</p>
     </div>
+    
+    <div id="rau">
+      <h2>RAU <b><u>R</u>ESET AND <u>A</u>DD TO <u>U</u>PPER</b></h2>
+      
+      
+      <table class="order">
+        <tr>
+          <th>Command</th>
+          <th>D-Track</th>
+          <th>D-Sector</th>
+          <th>N-Track</th>
+          <th>N-Sector</th>
+          <th>X-Tag</th>
+        </tr>
+        <tr>
+          <td>00010</td>
+          <td colspan=2>(DATA ADDRESS)</td>
+          <td colspan=2>(NEXT ADDRESS)</td>
+          <td>0/1</td>
+        </tr>
+        <tr>
+          <td><span>0</span><span>4</span></td>
+          <td><span>5</span><span>11</span></td>
+          <td><span>12</span><span>17</span></td>
+          <td><span>18</span><span>24</span></td>
+          <td><span>25</span><span>30</span></td>
+          <td>31</td>
+        </tr>
+      </table>
+      <p>
+        The contents of the memory location specified by the data-address will replace the current contents of the UPPER accumulator
+      </p>
+    </div>
   </body>
 </html>
