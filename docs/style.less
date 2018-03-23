@@ -12,6 +12,7 @@ table.order tr {
   td, th {
     border-right: 1px solid black;
     padding: 1px 5px;
+    text-align: center;
   }
   td:last-child, th:last-child {
     border-right: none;
@@ -21,7 +22,14 @@ table.order tr {
 table.order tr:nth-child(3) {
   /* 3rd row of bit numbers */
   font-size: x-small;
-  td span:nth-child(2) {
-    float: right;
+  td {
+    span:first-child{
+      float: left;
+      text-align: left;
+    }
+    span:2nd-child {
+      float: right;
+      text-align: right;
+    }
   }
 }
