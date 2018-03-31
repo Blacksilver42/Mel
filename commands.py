@@ -1,4 +1,7 @@
 import memory as mem
+import sys
+import getch
+
 
 class Order:
     def __init__(self, val):
@@ -12,11 +15,21 @@ class Order:
         #self.echo()
     
     def __str__(self):
-        return "{0:b}".format(self.val)
+        if(hasattr(self,"name")):
+            pass
+        else:
+            self.name = "{0} {1}{2} {3}{4}".format(
+                order_map[self.command].__name__,
+                self.dtrack, self.dsec,
+                self.ntrack, self.nsec)
+        return self.name
 
     def __format__(self, spec):
         return ("{0:"+spec+"}").format(self.val)
-        
+
+    def __eq__(self, other):
+        return self.val == other.val
+    
     def echo(self):
         print("command: {0:8b} = {0}".format(self.command))
         print("dtrack:  {0:8b} = {0}".format(self.dtrack))
@@ -24,64 +37,169 @@ class Order:
         print("ntrack:  {0:8b} = {0}".format(self.ntrack))
         print("nsec:    {0:8b} = {0}".format(self.nsec))
     
+    def __call__(self):
+        self.exec()
+    
     def exec(self):
+        print(self)
         mem.C = self
-        try:
-            [
-                hlt, cxe, rau, ral, sau, mst, ldc, ldx,
-                inp, exc
-            ][mem.C.command]()
-        except:
-            hcf()
+        order_map[mem.C.command]()
+
+    
 
 
 def hcf():
     # HALT_AND_CATCH_FIRE
-    print("HCF")
-    raise SystemExit
-    
+    print("Burn, baby, burn.")
+    exit(1)
 
-def hlt():
-    # TODO: implement this properly
-    # sns also uses the same opcode.
-    raise SystemExit
 
-def sns():
+def transfer():
+    mem.C.ntrack = mem.C.dtrack
+    mem.C.nsec   = mem.C.dsec
+
+def hlt(): #00000
+    if(mem.U.dtrack != 0):
+        sns()
+    else:
+        raise SystemExit
+
+def sns(): #00000
     # What do you want me to sense?
     # Interpreter flags?
     # TODO.
     pass
 
-def cxe():
+def cxe(): #00001
     # TODO
     pass
 
-def rau():
-    mem.U = mem.cread()
+def rau(): #00010
+    mem.U = mem.DRUM.cread()
 
-def ral(o):
-    mem.L = mem.cread()
+def ral(): #00011
+    mem.L = mem.DRUM.cread()
 
-def sau(o):
+def sau(): #00100
     #TODO
     pass
 
-def mst(o):
+def mst(): #00101
     #TODO
     pass
 
-def ldc(o):
+def ldc(): #00110
     #TODO
     pass
 
-def ldx(o):
+def ldx(): #00111
     #TODO
     pass
 
-def inp(o):
+def inp(): #01000
+    mem.B = False
+    try:
+        if(mem.C.dtrack == 0):
+            mem.U = getch.getch()
+        if(mem.C.dtrack == 1):
+            mem.L = getch.getch()
+        if(mem.C.dtrack == 2):
+            mem.U = int(input())
+        if(mem.C.dtrack == 3):
+            mem.L = int(input())
+    except:
+        mem.B = True
+
+def exc(): #01001
     #TODO
     pass
 
-def exc(o):
+def dvu(): #01010
+    mem.U = mem.U / mem.DRUM.cread()
+
+def div(): #01011
+    #TODO
+    dvu()
+
+def srl(): #01100
+    #TODO: there are like 6 unused bits in this command.
+    if(mem.C.dtrack == 0):
+        mem.U = mem.U >> mem.C.dsec
+    if(mem.C.dtrack == 1):
+        mem.U = mem.U << mem.C.dsec
+
+def slc(): #01101
+    # Cluster Foxtrot you, McBee.
+    srl()
+
+def mpy(): #01110
+    mem.L = mem.U * mem.cread()
+
+def mpt(): #01111
+    mem.U = mem.U * 10
+
+def prd(): #10000
+    # I'm out of clever insults.
+    pass
+
+def pru(): #10001
+    if(mem.C.dtrack == 0):
+        print(mem.U)
+    else:
+        print(chr(mem.U))
+
+def ext(): #10010
+    mem.U = mem.cread() & mem.U
+
+def mml(): #10011
     #TODO
     pass
+
+def cme(): #10100
+    mem.B = (mem.cread() == mem.U)
+
+def cmg(): #10101
+    mem.B = (mem.cread() > mem.U)
+
+def tmi(): #10110
+    if(mem.U < 0):
+        transfer()
+
+def tbc(): #10111
+    if(mem.B):
+        transfer()
+
+def stu(): #11000
+    mem.cwrite(mem.U)
+
+def stl(): #11001
+    mem.cwrite(mem.L)
+
+def clu(): #11010
+    stu()
+    mem.U = 0
+
+def cll(): #11011
+    stl()
+    mem.L = 0
+
+def adu(): #11100
+    mem.U += mem.cread()
+
+def adl(): #11101
+    mem.L += mem.cread()
+
+def sbu(): #11110
+    mem.U -= mem.cread()
+
+def sbl(): #11111
+    mem.L -= mem.cread()
+
+
+
+order_map = [
+    hlt, cxe, rau, ral, sau, mst, ldc, ldx,
+    inp, exc, dvu, div, srl, slc, mpy, mpt,
+    prd, pru, ext, mml, cme, cmg, tmi, tbc,
+    stu, stl, clu, cll, adu, adl, sbu, sbl
+]
