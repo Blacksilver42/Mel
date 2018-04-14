@@ -1,14 +1,25 @@
-from commands import Order
+import sys
+import commands
 
-while(1):
-    
-    print("   (cmd)(dtrak)(dsec)(ntrak)(nsec)x")
-    IN = input(">> ")
+if("-d" in sys.argv):
+    print("Decimal mode")
+    fmt = "d"
+else:
+    print("Hex mode")
+    fmt = "x"
+
+while 1:
+    IN = input(">>")
     try:
-        n = int(IN,2)
-    except:
-        continue
+        IN = IN.split()
+        cmd = IN[0]
+        d = IN[1]
+        n = IN[2]
+        dsec = d[:2]
+        dtrk = d[2:]
+        nsec = n[:2]
+        ntrk = n[2:]
 
-    o = Order(n)
-    print(o, "| {0} = 0x{0:08X}".format(n))
-    print()
+        
+    except:
+        print("?")

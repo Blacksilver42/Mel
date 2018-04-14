@@ -1,11 +1,10 @@
+import commands
+
 class Drum:
     def __init__(self, tracks, sectors):
         self.tracks = tracks
         self.sectors = sectors
         self.xyzzy = [[0 for i in range(sectors)] for j in range(tracks)]
-
-    def __call__(self):
-        print(self.xyzzy)
         
     def read(self, track, sec):
         return self.xyzzy[track][sec]
@@ -38,9 +37,7 @@ class Drum:
     def cnext(self):
         (C.dtrack, C.dsec) = self.next(C.dtrack, C.dsec)
         
-    def input(f):
-        # just assume f is open in rb mode.
-        
+            
 
 def init(tracks=122,sectors=64):
     global U
@@ -53,7 +50,6 @@ def init(tracks=122,sectors=64):
     L = 0 #   lower accumulator
     C = 0 # command register
     X = 0 #   index register
-    
     B = 0 #  branch control
     
     # The actual freakin' drum.
@@ -65,13 +61,11 @@ def cmd2i(x):
         return x
     return x.val
 
-def echo():
-    echo_reg()
+def echo(reg_spec="032b"):
+    echo_reg(spec=reg_spec)
     DRUM()
 
-
-def echo_reg():
-    spec = "032b"
+def echo_reg(spec = "032b"):
     print("U:", ("{0:"+spec+"} = {0}").format(U))
     print("L:", ("{0:"+spec+"} = {0}").format(L))
     print("C:", ("{0:"+spec+"} = {0}").format(C))

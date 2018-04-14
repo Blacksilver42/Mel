@@ -15,10 +15,11 @@ class Order:
         #self.echo()
     
     def __str__(self):
+        f="x"
         if(hasattr(self,"name")):
             pass
         else:
-            self.name = "{0} {1}{2} {3}{4}".format(
+            self.name = ("{0} {1:"+f+"}{2:"+f+"} {3:"+f+"}{4:"+f+"}").format(
                 order_map[self.command].__name__,
                 self.dtrack, self.dsec,
                 self.ntrack, self.nsec)
@@ -31,7 +32,7 @@ class Order:
         return self.val == other.val
     
     def echo(self):
-        print("command: {0:8b} = {0}".format(self.command))
+        print("command: {0:8b} = {1}".format(self.command,order_map[self.command].__name__))
         print("dtrack:  {0:8b} = {0}".format(self.dtrack))
         print("dsec:    {0:8b} = {0}".format(self.dsec))
         print("ntrack:  {0:8b} = {0}".format(self.ntrack))
@@ -42,10 +43,10 @@ class Order:
     
     def exec(self):
         print(self)
-        mem.C = self
         order_map[mem.C.command]()
-
+        mem.C = Order(mem.DRUM.read(self.ntrack,self.nsec))
     
+
 
 
 def hcf():
@@ -203,3 +204,8 @@ order_map = [
     prd, pru, ext, mml, cme, cmg, tmi, tbc,
     stu, stl, clu, cll, adu, adl, sbu, sbl
 ]
+
+def get_order(name):
+    for i in order_map:
+        if(i.__name__ == name):
+            return i
